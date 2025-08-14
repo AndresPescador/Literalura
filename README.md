@@ -20,7 +20,7 @@ Está desarrollada usando **Spring Boot**, **Spring Data JPA**, y conexión a ba
   - `entity` → Entidades JPA.
   - `repository` → Interfaces de acceso a datos.
   - `service` → Lógica de negocio.
-  - `Vista` → implementada mediante la interfaz de consola.
+  - `Vista` → Implementada mediante la interfaz de consola.
 
 ---
 
