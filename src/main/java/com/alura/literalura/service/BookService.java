@@ -9,27 +9,30 @@ import com.alura.literalura.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
 
-    private final GutendexClientService gutendexClient;
+    private final ApiService apiService;
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
 
-    public BookService(GutendexClientService gutendexClient,
+    public BookService(ApiService apiService,
                        BookRepository bookRepository,
                        AuthorRepository authorRepository) {
-        this.gutendexClient = gutendexClient;
+        this.apiService = apiService;
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
     }
 
     @Transactional
     public Optional<Book> searchAndSaveBookByTitle(String title) {
-        Optional<GutendexBookDto> maybe = gutendexClient.searchFirstBookByTitle(title);
+        Optional<GutendexBookDto> maybe = apiService.searchFirstBookByTitle(title);
         if (maybe.isEmpty()) return Optional.empty();
 
         GutendexBookDto dto = maybe.get();
@@ -66,10 +69,29 @@ public class BookService {
     }
 
     public List<Book> listBooksByLanguage(String language) {
-        return bookRepository.findByLanguage(language);
+        return bookRepository.findByLanguageIgnoreCase(language);
     }
 
     public long countBooksByLanguage(String language) {
-        return bookRepository.countByLanguage(language);
+        return bookRepository.countByLanguageIgnoreCase(language);
+    }
+
+    public List<Book> getTop10MostDownloaded() {
+        return bookRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparingInt(Book::getDownloadCount).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    public DoubleSummaryStatistics getDownloadStatistics() {
+        return bookRepository.findAll()
+                .stream()
+                .mapToDouble(Book::getDownloadCount)
+                .summaryStatistics();
+    }
+
+    public List<Book> findBooksByAuthorName(String authorName) {
+        return bookRepository.findByAuthor_NameContainingIgnoreCase(authorName);
     }
 }

@@ -15,5 +15,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Query("SELECT a FROM Author a WHERE a.birthYear <= :year AND (a.deathYear IS NULL OR a.deathYear >= :year)")
     List<Author> findAuthorsAliveInYear(@Param("year") Integer year);
 
-    Optional<Author> findByName(String name);
+    List<Author> findByBirthYearGreaterThan(int year);
+
+    List<Author> findByDeathYearLessThan(int year);
 }
