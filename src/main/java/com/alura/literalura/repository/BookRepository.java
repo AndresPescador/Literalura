@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findByLanguage(String language);
+    List<Book> findByLanguageIgnoreCase(String language);
 
-    long countByLanguage(String language);
+    long countByLanguageIgnoreCase(String language);
+
+    List<Book> findByAuthor_NameContainingIgnoreCase(String authorName);
 }

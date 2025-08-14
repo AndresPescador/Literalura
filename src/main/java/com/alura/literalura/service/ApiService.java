@@ -16,13 +16,13 @@ import java.time.Duration;
 import java.util.Optional;
 
 @Service
-public class GutendexClientService {
+public class ApiService {
 
     private static final String BASE = "https://gutendex.com/books";
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    public GutendexClientService(ObjectMapper objectMapper) {
+    public ApiService(ObjectMapper objectMapper) {
         this.httpClient = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.ALWAYS)
                 .connectTimeout(Duration.ofSeconds(10))
@@ -53,7 +53,7 @@ public class GutendexClientService {
                     return Optional.empty();
                 }
             } else {
-                System.err.println("Gutendex returned non-2xx: " + resp.statusCode());
+                System.err.println("Error: " + resp.statusCode());
                 return Optional.empty();
             }
         } catch (IOException | InterruptedException e) {

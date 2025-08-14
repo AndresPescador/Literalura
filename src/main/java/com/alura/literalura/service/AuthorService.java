@@ -11,8 +11,8 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
 
-    public AuthorService(AuthorRepository repo) {
-        this.authorRepository = repo;
+    public AuthorService(AuthorRepository repository) {
+        this.authorRepository = repository;
     }
 
     public List<Author> listAllAuthors() {
@@ -21,5 +21,13 @@ public class AuthorService {
 
     public List<Author> listAuthorsAliveInYear(Integer year) {
         return authorRepository.findAuthorsAliveInYear(year);
+    }
+
+    public List<Author> findAuthorsBornAfter(int year) {
+        return authorRepository.findByBirthYearGreaterThan(year);
+    }
+
+    public List<Author> findAuthorsDiedBefore(int year) {
+        return authorRepository.findByDeathYearLessThan(year);
     }
 }
